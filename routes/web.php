@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\Settings\ProfileController;
-use App\Http\Controllers\Auth\Settings\PasswordController;
-use App\Http\Controllers\Auth\SettingsController;
 use App\Http\Controllers\ZapatoController;
 use App\Http\Controllers\CategoriaController;
 use Illuminate\Foundation\Application;
@@ -62,15 +59,8 @@ Route::resource('zapatos', ZapatoController::class)->middleware('auth');
 // Rutas para el CRUD de categorías
 Route::resource('categorias', CategoriaController::class);
 
+// Incluir las rutas de configuración desde settings.php
+require __DIR__.'/settings.php';
 
-Route::middleware('auth')->group(function () {
-    Route::get('/settings', [SettingsController::class, 'profile'])->name('settings.index');
-    Route::get('/settings/password', [PasswordController::class, 'edit'])->name('settings.password');
-    Route::put('/settings/password', [PasswordController::class, 'update'])->name('password.update');
-    Route::get('/settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/settings/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/settings/appearance', [SettingsController::class, 'appearance'])->name('settings.appearance');
-});
-
+// Incluir las rutas de autenticación
 require __DIR__.'/auth.php';

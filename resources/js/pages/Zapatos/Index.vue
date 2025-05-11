@@ -17,7 +17,7 @@
                     v-model="busqueda" 
                     placeholder="Buscar zapatos..." 
                     style="flex-grow: 1; padding: 10px; border: 1px solid #767676;"
-                    @input="buscarConDelay"
+                    @input="buscarConAxios"
                     aria-label="Buscar zapatos por nombre, marca, talla, color, precio o stock"
                 />
             </div>
@@ -31,7 +31,7 @@
                     id="categoria-select"
                     v-model="categoriaSeleccionada" 
                     style="flex-grow: 1; padding: 8px; border: 1px solid #767676;" 
-                    @change="aplicarFiltros"
+                    @change="buscarConAxios"
                     aria-label="Filtrar zapatos por categoría"
                 >
                     <option value="">Todas las categorías</option>
@@ -57,7 +57,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(zapato, index) in zapatos.data" :key="zapato.id" style="border: 1px solid #ddd;" :style="index % 2 === 0 ? 'background-color: #f2f2f2;' : 'background-color: white;'">
+                    <tr v-for="(zapato, index) in zapatosFiltrados" :key="zapato.id" style="border: 1px solid #ddd;" :style="index % 2 === 0 ? 'background-color: #f2f2f2;' : 'background-color: white;'">
                         <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ zapato.id }}</td>
                         <td style="border: 1px solid #ddd; padding: 8px;">{{ zapato.nombre }}</td>
                         <td style="border: 1px solid #ddd; padding: 8px;">{{ zapato.marca }}</td>
@@ -88,7 +88,7 @@
                             </button>
                         </td>
                     </tr>
-                    <tr v-if="zapatos.data.length === 0">
+                    <tr v-if="zapatosFiltrados.length === 0">
                         <td colspan="9" style="border: 1px solid #ddd; padding: 15px; text-align: center; color: #666;">No se encontraron anuncios</td>
                     </tr>
                 </tbody>
@@ -139,7 +139,8 @@
 import { Head, Link } from '@inertiajs/vue3';
 import anuncisLayout from '@/layouts/anuncislayout.vue';
 import { router } from '@inertiajs/vue3';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
 const props = defineProps({
     zapatos: Object,
@@ -147,86 +148,51 @@ const props = defineProps({
     filters: Object
 });
 
-// Estado para el buscador y filtros
+// Variables
 const busqueda = ref('');
 const categoriaSeleccionada = ref('');
+const zapatosFiltrados = ref([]);
+const cargando = ref(false);
 let timeoutId = null;
 
-// Inicializar los filtros desde props si existen
+// Inicializar datos
 onMounted(() => {
     if (props.filters) {
         busqueda.value = props.filters.search || '';
         categoriaSeleccionada.value = props.filters.categoria || '';
     }
-    
-    // Añadir manejadores de eventos para accesibilidad por teclado
-    document.addEventListener('keydown', manejarTeclas);
+    zapatosFiltrados.value = props.zapatos.data || [];
 });
 
-onBeforeUnmount(() => {
-    document.removeEventListener('keydown', manejarTeclas);
-});
-
-// Manejar navegación por teclado
-function manejarTeclas(e) {
-    // Permitir navegar con Escape para cerrar el modal de confirmación
-    if (e.key === 'Escape' && document.activeElement.tagName === 'BUTTON') {
-        document.activeElement.blur();
-    }
+// Buscar con Axios y delay
+function buscarConAxios() {
+        
+        axios.get(route('zapatos.buscar'), {
+            params: {
+                q: busqueda.value,
+                categoria: categoriaSeleccionada.value
+            }
+        })
+        .then(response => {
+            zapatosFiltrados.value = response.data;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al buscar zapatos');
+        })
+        .finally(() => {
+            cargando.value = false;
+        });
 }
 
-// Aplicar filtros
-function aplicarFiltros() {
-    router.get(
-        route('zapatos.index'),
-        {
-            search: busqueda.value,
-            categoria: categoriaSeleccionada.value
-        },
-        {
-            preserveState: true,
-            preserveScroll: true,
-            only: ['zapatos']
-        }
-    );
-}
-
-// Buscar con delay para evitar muchas peticiones
-function buscarConDelay() {
-    // Cancelar el timeout anterior si existe
-    if (timeoutId) {
-        clearTimeout(timeoutId);
-    }
-    
-    // Crear un nuevo timeout de 300ms
-    timeoutId = setTimeout(() => {
-        aplicarFiltros();
-    }, 300);
-}
-
-// Limpiar filtros
-function limpiarFiltros() {
-    busqueda.value = '';
-    categoriaSeleccionada.value = '';
-    router.get(route('zapatos.index'));
-}
-
-// Eliminar zapato
+// Eliminar zapato con Axios - versión ultra simple
 function eliminarZapato(id) {
     if (confirm('¿Estás seguro de que deseas eliminar este zapato?')) {
-        router.delete(route('zapatos.destroy', id));
+        axios.post(`/zapatos/${id}`, {
+            _method: 'DELETE'
+        })
+            .then(() => zapatosFiltrados.value = zapatosFiltrados.value.filter(zapato => zapato.id !== id))
+            .catch(() => alert('Error al eliminar'));
     }
 }
 </script>
-
-<style>
-/* Mejoras de accesibilidad */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-</style> 

@@ -16,6 +16,11 @@ const form = useForm({
 });
 
 const submit = () => {
+    if (form.password.includes(' ') || form.password.length < 6) {
+        form.setError('password', 'La contraseña debe tener al menos 6 caracteres y no contener espacios');
+        return;
+    }
+    
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });

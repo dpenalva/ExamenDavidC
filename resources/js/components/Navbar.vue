@@ -68,7 +68,7 @@
                                 transform: isMobile ? 'translateX(50%)' : 'none'
                             }"
                         >
-                            <Link :href="route('settings.index')" style="display: block; padding: 10px 15px; color: #333; text-decoration: none; border-bottom: 1px solid #eee;">
+                            <Link href="/settings" style="display: block; padding: 10px 15px; color: #333; text-decoration: none; border-bottom: 1px solid #eee;">
                                 Perfil
                             </Link>
                             <button @click="logout" style="width: 100%; text-align: left; background: none; border: none; padding: 10px 15px; color: #333; cursor: pointer;">

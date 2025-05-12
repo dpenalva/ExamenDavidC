@@ -16,14 +16,13 @@ class Categoria extends Model
      */
     protected $fillable = [
         'nombre',
-        'descripcion',
     ];
 
     /**
      * Obtiene los zapatos relacionados con esta categoría.
      */
-    public function zapatos()
+    public function anuncis()
     {
-        return $this->hasMany(Zapato::class);
+        return $this->hasMany(Anuncis::class);
     }
 } 

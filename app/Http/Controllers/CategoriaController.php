@@ -14,7 +14,7 @@ class CategoriaController extends Controller
     public function index()
     {
         return Inertia::render('Categorias/Index', [
-            'categorias' => Categoria::withCount('zapatos')->get()
+            'categorias' => Categoria::withCount('anuncis')->get()
         ]);
     }
 
@@ -46,8 +46,8 @@ class CategoriaController extends Controller
      */
     public function show(Categoria $categoria)
     {
-        $categoria->loadCount('zapatos');
-        $categoria->load('zapatos');
+        $categoria->loadCount('anuncis');
+        $categoria->load('anuncis');
         
         return Inertia::render('Categorias/Show', [
             'categoria' => $categoria
@@ -85,7 +85,7 @@ class CategoriaController extends Controller
     public function destroy(Categoria $categoria)
     {
         // Verificar si hay zapatos asociados a esta categoría
-        if ($categoria->zapatos()->count() > 0) {
+        if ($categoria->anuncis()->count() > 0) {
             if (request()->header('X-Inertia')) {
                 return back()->with('error', 'No se puede eliminar esta categoría porque tiene zapatos asociados.');
             }

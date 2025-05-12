@@ -32,18 +32,18 @@
                 }"
             >
                 <Link 
-                    :href="route('zapatos.index')" 
+                    :href="route('anuncis.index')" 
                     style="color: white; text-decoration: none; padding: 10px; transition: opacity 0.3s;"
                     :style="{ width: isMobile ? '100%' : 'auto', textAlign: isMobile ? 'center' : 'left' }"
                 >
                     Llista
                 </Link>
                 <Link 
-                    :href="route('zapatos.create')" 
+                    :href="route('anuncis.create')" 
                     style="color: white; text-decoration: none; padding: 10px; transition: opacity 0.3s;"
                     :style="{ width: isMobile ? '100%' : 'auto', textAlign: isMobile ? 'center' : 'left' }"
                 >
-                    Crear Anuncis
+                    Crear 
                 </Link>
                 
                 <!-- Usuario autenticado -->

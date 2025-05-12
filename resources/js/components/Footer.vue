@@ -4,7 +4,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
                     <p class="text-center md:text-left text-gray-300">
-                        &copy; {{ new Date().getFullYear() }} ZapatosApp. Todos los derechos reservados.
+                        &copy; {{ new Date().getFullYear() }} Todos los derechos reservados.
                     </p>
                 </div>
             </div>

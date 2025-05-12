@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('zapatos', function (Blueprint $table) {
-            $table->foreignId('categoria_id')->nullable()->constrained('categorias')->onDelete('set null');
+        Schema::create('anuncis', function (Blueprint $table) {
+            $table->id();
+            $table->string('Titol');
+            $table->string('descripció');
+            $table->string('email');
+            $table->date('date');
+            $table->time('hora');
+            $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('zapatos', function (Blueprint $table) {
-            $table->dropForeign(['categoria_id']);
-            $table->dropColumn('categoria_id');
-        });
+        Schema::dropIfExists('anuncis');
     }
 };

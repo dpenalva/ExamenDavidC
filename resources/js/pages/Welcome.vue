@@ -6,7 +6,7 @@ import Footer from '@/components/Footer.vue';
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
-    zapatosDestacados: {
+    anuncisDestacados: {
         type: Array,
         default: () => [],
     },
@@ -14,7 +14,7 @@ const props = defineProps({
 
 // Para el carrusel
 const indiceActual = ref(0);
-const totalSlides = computed(() => props.zapatosDestacados.length || 1);
+const totalSlides = computed(() => props.anuncisDestacados.length || 1);
 
 function siguienteSlide() {
     indiceActual.value = (indiceActual.value + 1) % totalSlides.value;
@@ -49,12 +49,12 @@ function manejarTeclado(e) {
     }
 }
 
-const irAListadoZapatos = () => {
-    router.visit(route('zapatos.index'));
+const irAListadoAnuncis = () => {
+    router.visit(route('anuncis.index'));
 };
 
-const irACrearZapato = () => {
-    router.visit(route('zapatos.create'));
+const irACrearAnuncis = () => {
+    router.visit(route('anuncis.create'));
 };
 </script>
 
@@ -74,11 +74,11 @@ const irACrearZapato = () => {
             <div style="background-color: #d1d1d1; text-align: center; color: black; padding: 20px;">
                 Anuncis:
                 <div style="margin-top: 10px;">
-                    <button @click="irACrearZapato" style="background-color: white; color: black; font-weight: bold; padding: 8px 15px; border: 1px solid black; margin-right: 10px; cursor: pointer;">
-                        Crear Zapato
+                    <button @click="irACrearAnuncis" style="background-color: white; color: black; font-weight: bold; padding: 8px 15px; border: 1px solid black; margin-right: 10px; cursor: pointer;">
+                        Crear
                     </button>
-                    <button @click="irAListadoZapatos" style="background-color: white; color: black; font-weight: bold; padding: 8px 15px; border: 1px solid black; cursor: pointer;">
-                        Ver Lista Zapatos
+                    <button @click="irAListadoAnuncis" style="background-color: white; color: black; font-weight: bold; padding: 8px 15px; border: 1px solid black; cursor: pointer;">
+                        Ver Lista
                     </button>
                             </div>
                             </div>

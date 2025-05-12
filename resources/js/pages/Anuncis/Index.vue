@@ -53,42 +53,45 @@
                         <th scope="col" style="border: 1px solid #ddd; padding: 8px; text-align: center; color: black;">Descripció</th>
                         <th scope="col" style="border: 1px solid #ddd; padding: 8px; text-align: center; color: black;">Categoría</th>
                         <th scope="col" style="border: 1px solid #ddd; padding: 8px; text-align: center; color: black;">Email</th>
+                        <th scope="col" style="border: 1px solid #ddd; padding: 8px; text-align: center; color: black;">Hora</th>
+                        <th scope="col" style="border: 1px solid #ddd; padding: 8px; text-align: center; color: black;">Data</th>
                         <th scope="col" style="border: 1px solid #ddd; padding: 8px; text-align: center; color: black;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(zapato, index) in zapatosFiltrados" :key="zapato.id" style="border: 1px solid #ddd;" :style="index % 2 === 0 ? 'background-color: #f2f2f2;' : 'background-color: white;'">
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ zapato.id }}</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">{{ zapato.nombre }}</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">{{ zapato.marca }}</td>
-                        <td style="border: 1px solid #ddd; padding: 8px;">{{ zapato.categoria ? zapato.categoria.nombre : 'Sin categoría' }}</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ zapato.talla }}</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ zapato.stock }}</td>
+                    <tr v-for="(anuncis, index) in anuncisFiltrados" :key="anuncis.id" style="border: 1px solid #ddd;" :style="index % 2 === 0 ? 'background-color: #f2f2f2;' : 'background-color: white;'">
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ anuncis.id }}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">{{ anuncis.Titol }}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">{{ anuncis.descripció }}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px;">{{ anuncis.categoria ? anuncis.categoria.nombre : 'Sin categoría' }}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ anuncis.email }}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ anuncis.hora }}</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{{ anuncis.date }}</td>
                         <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">
                             <Link 
-                                :href="route('zapatos.show', zapato.id)" 
+                                :href="route('anuncis.show', anuncis.id)" 
                                 style="background-color: #2b72e6; color: white; padding: 5px; text-decoration: none; margin-right: 3px; display: inline-block;"
-                                aria-label="Ver detalles del zapato"
+                                aria-label="Ver detalles del anuncis"
                             >
                                 Ver
                             </Link>
                             <Link 
-                                :href="route('zapatos.edit', zapato.id)" 
+                                :href="route('anuncis.edit', anuncis.id)" 
                                 style="background-color: #c85200; color: white; padding: 5px; text-decoration: none; margin-right: 3px; display: inline-block;"
-                                aria-label="Editar zapato"
+                                aria-label="Editar anuncis"
                             >
                                 Editar
                             </Link>
                             <button 
-                                @click="eliminarZapato(zapato.id)" 
+                                @click="eliminarAnuncis(anuncis.id)" 
                                 style="background-color: #e00; color: white; padding: 5px; border: none; cursor: pointer;"
-                                aria-label="Eliminar zapato"
+                                aria-label="Eliminar anuncis"
                             >
                                 Eliminar
                             </button>
                         </td>
                     </tr>
-                    <tr v-if="zapatosFiltrados.length === 0">
+                    <tr v-if="anuncisFiltrados.length === 0">
                         <td colspan="9" style="border: 1px solid #ddd; padding: 15px; text-align: center; color: #666;">No se encontraron anuncios</td>
                     </tr>
                 </tbody>
@@ -96,10 +99,10 @@
         </div>
         
         <!-- Paginación Accesible -->
-        <nav v-if="zapatos.links && zapatos.links.length > 3" style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;" aria-label="Paginación de zapatos">
+        <nav v-if="anuncis.links && anuncis.links.length > 3" style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;" aria-label="Paginación de anuncis">
             <div style="display: flex; justify-content: center; margin: 10px 0;">
                 <Link 
-                    v-for="(link, i) in zapatos.links" 
+                    v-for="(link, i) in anuncis.links" 
                     :key="i"
                     :href="link.url ? link.url : '#'"
                     :style="{
@@ -119,13 +122,13 @@
                 ></Link>
             </div>
             <div style="font-size: 14px; color: #666; margin-top: 8px;" aria-live="polite">
-                Mostrando {{ zapatos.from }} a {{ zapatos.to }} de {{ zapatos.total }} zapatos
+                Mostrando {{ anuncis.from }} a {{ anuncis.to }} de {{ anuncis.total }} anuncios
             </div>
         </nav>
         
         <div style="text-align: center; margin-top: 20px;">
             <Link 
-                :href="route('zapatos.create')" 
+                :href="route('anuncis.create')" 
                 style="background-color: #008933; color: white; padding: 10px 15px; text-decoration: none; display: inline-block;"
                 aria-label="Añadir Nuevo Anuncio"
             >
@@ -143,7 +146,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const props = defineProps({
-    zapatos: Object,
+    anuncis: Object,
     categorias: Array,
     filters: Object
 });
@@ -151,7 +154,7 @@ const props = defineProps({
 // Variables
 const busqueda = ref('');
 const categoriaSeleccionada = ref('');
-const zapatosFiltrados = ref([]);
+const anuncisFiltrados = ref([]);
 const cargando = ref(false);
 let timeoutId = null;
 
@@ -161,37 +164,37 @@ onMounted(() => {
         busqueda.value = props.filters.search || '';
         categoriaSeleccionada.value = props.filters.categoria || '';
     }
-    zapatosFiltrados.value = props.zapatos.data || [];
+    anuncisFiltrados.value = props.anuncis.data || [];
 });
 
 // Buscar con Axios y delay
 function buscarConAxios() {
         
-        axios.get(route('zapatos.buscar'), {
+        axios.get(route('anuncis.buscar'), {
             params: {
                 q: busqueda.value,
                 categoria: categoriaSeleccionada.value
             }
         })
         .then(response => {
-            zapatosFiltrados.value = response.data;
+            anuncisFiltrados.value = response.data;
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error al buscar zapatos');
+            alert('Error al buscar anuncios');
         })
         .finally(() => {
             cargando.value = false;
         });
 }
 
-// Eliminar zapato con Axios - versión ultra simple
-function eliminarZapato(id) {
-    if (confirm('¿Estás seguro de que deseas eliminar este zapato?')) {
-        axios.post(`/zapatos/${id}`, {
+// Eliminar Axios 
+function eliminarAnuncis(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar este anuncis?')) {
+        axios.post(`/anuncis/${id}`, {
             _method: 'DELETE'
         })
-            .then(() => zapatosFiltrados.value = zapatosFiltrados.value.filter(zapato => zapato.id !== id))
+            .then(() => anuncisFiltrados.value = anuncisFiltrados.value.filter(anuncis => anuncis.id !== id))
             .catch(() => alert('Error al eliminar'));
     }
 }

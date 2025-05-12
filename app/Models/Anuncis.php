@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Zapato extends Model
+class Anuncis extends Model
 {
     use HasFactory;
     
@@ -15,9 +15,11 @@ class Zapato extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'nombre',
-        'marca',
-        'talla',
+        'Titol',
+        'descripció',
+        'email',
+        'date',
+        'hora',
         'categoria_id',
     ];
 
